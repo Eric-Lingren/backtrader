@@ -10,7 +10,8 @@ from strategies import *
 
 
 # data_filename = '/Volumes/External/test-data/test.h5'
-data_filename = '/Users/ericlingren/Desktop/test.h5'
+data_filename = '/Users/ericlingren/Desktop/week-1.h5'
+# data_filename = '/Users/ericlingren/Desktop/EURUSD-1-min.h5'
 cerebro = bt.Cerebro()
 
 
@@ -19,13 +20,27 @@ if __name__ == '__main__':
     args = parse_args()
     
     # Add a strategy
-    cerebro.addstrategy(PrintPrices)
+    cerebro.addstrategy(PrintTickPrices)
 
     # Build Data Frame
     df = build_df(args, data_filename)
 
+    # tframes = dict(
+    #     daily=bt.TimeFrame.Days,
+    #     weekly=bt.TimeFrame.Weeks,
+    #     monthly=bt.TimeFrame.Months)
+
     # Load Data Frame into Backtrader
-    data = bt.feeds.PandasData(dataname=df, high=0, low=1)
+
+        #  Formats data for tick datasets 
+    if len(df.columns) == 2: 
+        data = bt.feeds.PandasData(dataname=df, high=0, low=1) 
+    
+        #  Formats data for 1 min+ datasets 
+    if len(df.columns) == 5:    
+        data = bt.feeds.PandasData(dataname=df, open=0, high=1, low=2, close=3) 
+
+    # cerebro.resampledata(data, timeframe=bt.TimeFrame.Minutes, compression=2)
     cerebro.adddata(data)
 
     # Set Account Value
