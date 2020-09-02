@@ -25,7 +25,7 @@ if __name__ == '__main__':
     df = build_df(args, data_filename)
 
     # Load Data Frame into Backtrader
-    data = bt.feeds.PandasData(dataname=df, low=1, high=0)
+    data = bt.feeds.PandasData(dataname=df, high=0, low=1)
     cerebro.adddata(data)
 
     # Set Account Value
