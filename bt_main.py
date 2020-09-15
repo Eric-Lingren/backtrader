@@ -12,8 +12,9 @@ from print_analysis import printTradeSummary, printSystemDrawdown, printSystemSh
 # data_filename = '/Volumes/External/test-data/test.h5'
 # data_filename = '/Users/ericlingren/Desktop/week-1.h5'
 # data_filename = '/Users/ericlingren/Documents/week-1.h5'
-data_filename = '/Users/ericlingren/Documents/EURUSD-2017-1Min.csv'
+data_filename = '/Users/ericlingren/Documents/EURUSD-2019-1Min.csv'
 cerebro = bt.Cerebro()
+
 
 
 
@@ -24,7 +25,7 @@ if __name__ == '__main__':
     
     # Add a strategy
     cerebro.addstrategy(RSITest)
-    # cerebro.optstrategy(RSITest, rsi_limit=range(60,71))
+    # cerebro.optstrategy(RSITest, loss_target=range(11,21))
 
     # Build Data Frame
     df = build_df(args, data_filename)
@@ -43,7 +44,6 @@ if __name__ == '__main__':
     if len(df.columns) == 4:    
         data = bt.feeds.PandasData(dataname=df, open=0, high=1, low=2, close=3) 
 
-    # cerebro.resampledata(data, timeframe=bt.TimeFrame.Minutes, compression=2)
     cerebro.adddata(data)
 
     cerebro.addobserver(bt.observers.DrawDown)
@@ -52,17 +52,17 @@ if __name__ == '__main__':
     cerebro.addanalyzer(bt.analyzers.DrawDown, _name="draw_down")
     cerebro.addanalyzer(bt.analyzers.SharpeRatio, timeframe=bt.TimeFrame.Minutes, compression=5, factor=365, _name="sharpe")
 
-    strats =  cerebro.run()
-    strat = strats[0]
     # cerebro.addobserver(bt.observers.Value)#
 
-    # Set Account Value
+    # Set Account / Broker Data
+    size = 10000
     cerebro.broker.setcash(1000.0)
-    cerebro.broker.setcommission(commission=0.00, leverage=50)
-    cerebro.addsizer(bt.sizers.FixedSize, stake=10000)
+    cerebro.broker.setcommission(commission=0.0000, leverage=50)
+    cerebro.addsizer(bt.sizers.FixedSize, stake=size)
 
     print('\nStarting Portfolio Value: %.2f\n' % cerebro.broker.getvalue())
 
+    # cerebro.run(maxcpus=3)
     strats = cerebro.run(maxcpus=3)
     strat = strats[0]
 

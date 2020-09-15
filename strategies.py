@@ -221,8 +221,8 @@ class MovingAverageTest(bt.Strategy):
 
 class RSITest(bt.Strategy):
     params = (
-        ('profit_target', 3),
-        ('loss_target', 5),
+        ('profit_target', 10),
+        ('loss_target', 10),
         ('rsiperiod1', 21),
         ('rsi_limit', 70),
         ('momentumperiod', 20 )
@@ -293,8 +293,11 @@ class RSITest(bt.Strategy):
         # Check if we are in the market
         if not self.position:
 
-            # Not yet ... we MIGHT BUY if ...
-            # if self.rsi[0] < 30:
+            # Check Buy
+            if self.rsi[0] < 30:
+                if (self.dataclose[-2] >= self.dataclose[-1]) and (self.dataclose[-1] >= self.dataclose[0]):
+                    self.order = self.buy()
+                    self.log('New BUY CREATE, %.5f' % self.dataclose[0])
             #     for index in range(6):
             #         print(self.momentum[-index])
             #     # if self.datahigh[0] > self.datahigh[-4]:
@@ -302,7 +305,7 @@ class RSITest(bt.Strategy):
             #         # Keep track of the created order to avoid a 2nd order
             #     self.order = self.buy()
             #     self.log('BUY CREATE, %.5f' % self.dataclose[0])
-            # Check sell 
+            # Check Sell 
             if self.rsi[0] > self.params.rsi_limit:
                 if (self.dataclose[-2] <= self.dataclose[-1]) and (self.dataclose[-1] <= self.dataclose[0]):
 
@@ -321,9 +324,9 @@ class RSITest(bt.Strategy):
 
     # Used for optimizations only
     # def stop(self):
-    # #     # self.log('(Profit Target of %2d) Ending Value %.2f' %
-    # #     #         (self.params.profit_target, self.broker.getvalue()))
-    # #     print('(loss Target of %2d) Ending Value %.2f' %
-    # #             (self.params.loss_target, self.broker.getvalue()))
-    #     print('(RSI Limit of of %2d) Ending Value %.2f' %
-    #             (self.params.rsi_limit, self.broker.getvalue()))
+    #     print('(Profit Target of %2d) Ending Value %.2f' %
+    #             (self.params.loss_target, self.broker.getvalue()))
+    #     print('(loss Target of %2d) Ending Value %.2f' %
+    #             (self.params.loss_target, self.broker.getvalue()))
+        # print('(RSI Limit of of %2d) Ending Value %.2f' %
+        #         (self.params.rsi_limit, self.broker.getvalue()))
