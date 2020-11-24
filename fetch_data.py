@@ -6,7 +6,6 @@ import time
 
 def build_df(args, filename):
     start_time = time.time()
-    print('Loading Data File...')
     file_suffix_start = filename.find('.')
     file_type = filename[file_suffix_start:]
 

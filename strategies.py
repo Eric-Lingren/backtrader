@@ -235,6 +235,7 @@ class RSITest(bt.Strategy):
         # print('%s %s - %s' % (date.isoformat(), time, txt))
 
     def __init__(self):
+        print('---------- Running RSI Test Stratgey ----------\n')
         # Keep a reference to the "close" line in the data[0] dataseries
         self.dataclose = self.datas[0].close
         self.datahigh = self.datas[0].high
